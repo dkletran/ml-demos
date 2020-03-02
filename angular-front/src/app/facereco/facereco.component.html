@@ -1,0 +1,81 @@
+<h1>Face regconition demo app</h1>
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Input photo</mat-card-title>
+  </mat-card-header>
+
+  <div class="container">
+
+    <div class="d-flex flex-column align-items-center">
+      <div class="row justify-content-center pb-1">
+        <div *ngIf="isDesktop" class="mr-1">
+          <button *ngIf="cameraOn == false" class="btn btn-primary" (click)="startCamera()">From
+            Camera</button>
+          <button *ngIf="cameraOn" class="btn btn-primary" (click)="capture()">Capture Image</button>
+        </div>
+        <div class="ml-1">
+          <input hidden type="file" accept="image/*" (change)="drawLocalImage($event)" #imgInput>
+          <button class="btn btn-primary" (click)="imgInput.click()" [disabled]="loadingLocalImage || cameraOn">
+            <ng-template [ngIf]="loadingLocalImage">
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true">
+              </span>
+              Loading...
+            </ng-template>
+            <ng-template [ngIf]="loadingLocalImage == false">
+              {{ browseButtonLabel }}
+            </ng-template>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="d-flex flex-column align-items-center">
+      <div [hidden]="photoCaptured == false && cameraOn == false" class="row justify-content-center pb-1">
+        <video [hidden]="photoCaptured && cameraOn == false" #video class="vid" autoplay></video>
+        <canvas [hidden]="cameraOn" #canvas class="vid"></canvas>
+      </div>
+    </div>
+    <div class="row justify-content-center pb-1" *ngIf="photoCaptured && cameraOn==false">
+      <button class="btn btn-primary" (click)="identifyFaces()" [disabled]="identifying">
+        <ng-template [ngIf]="identifying">
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true">
+          </span>
+          Processing...
+        </ng-template>
+        <ng-template [ngIf]="identifying == false">
+          Start face regconition
+        </ng-template>
+      </button>
+    </div>
+  </div>
+</mat-card>
+<mat-card *ngIf="photoCaptured" [hidden]="identifiedFaces.length == 0">
+  <mat-card-header>
+    <mat-card-title>Regconized faces</mat-card-title>
+    <mat-card-subtitle>Click to tag/retag</mat-card-subtitle>
+  </mat-card-header>
+  <div class="container">
+    <div class="d-flex flex-column align-items-center">
+
+      <div class="justify-content-center">
+        <div class='detectFaces' *ngFor="let face of identifiedFaces"
+          (click)="faceLabel.hidden=true;retagBox.hidden=false;ibox.disabled=false;check.hidden=true;">
+          <img #faceImg src="{{ face.data }}" />
+          <div>
+            <label #faceLabel>{{ face.name }}</label>
+            <div #retagBox hidden>
+              <input #ibox (keyup.enter)="putFaceName(ibox, faceImg.src, spinner, check)" placeholder="Tag your name" />
+            </div>
+          </div>
+          <span hidden #spinner class="spinner">
+            <div class="spinner-border" role="status">
+            </div>
+          </span>
+          <span hidden #check class="check">OK!</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</mat-card>

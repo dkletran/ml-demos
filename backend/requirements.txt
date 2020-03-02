@@ -1,0 +1,7 @@
+django==3.0.3
+tensorflow==2.0.0
+mtcnn==0.1.0
+djangorestframework==3.11.0
+Pillow==7.0.0
+numpy==1.18.1
+scipy==1.4.1

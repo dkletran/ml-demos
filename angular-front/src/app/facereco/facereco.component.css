@@ -1,0 +1,26 @@
+.vid {
+    width: 50%;
+    height: 50%;
+}
+.detectFaces {
+    float: left;
+    margin: 10px;
+    display: grid;
+    grid-template-columns: 100px;
+}
+.detectFaces img {
+    margin:0px;
+    max-width: 100%;
+    max-height:100%;
+    object-fit: contain;
+}
+.detectFaces input,label{
+    width:100%;
+    text-align: center;
+}
+.detectFaces .spinner,.check{
+    text-align: center;
+}
+.detectFaces .check {
+    color:green;
+}
