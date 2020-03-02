@@ -1,4 +1,4 @@
-# facereco demo app with django and angular
+# demo app with django and angular
 # Dependencies
 Angular 8.1
 Python 3.6
