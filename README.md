@@ -8,7 +8,6 @@ Python 3.6
     npm intall 
     ng build
 ## backend 
-    python manage.py makemigrations
     python manage.py migrate
 
-Pretrained model must be placed in the backend folder as facenet_model/facenet_keras.h5
+Pretrained model must be placed in the backend folder e.g models/facenet_keras.h5
