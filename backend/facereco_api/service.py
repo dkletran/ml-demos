@@ -1,6 +1,6 @@
 import os
 import base64
-from backend.settings import BASE_DIR
+from django.conf import settings
 from io import BytesIO
 import tensorflow as tf
 from tensorflow.python.eager.wrap_function import function_from_graph_def
@@ -14,7 +14,12 @@ from .models import FaceTag
 
 URL_CANVAS_START = "data:image/png;base64,"
 URL_CANVAS_START_AT = len(URL_CANVAS_START)
-FACENET_PATH = os.path.join(BASE_DIR, 'models/facenet/20180402-114759.pb')
+try: 
+    FACENET_PATH = tf.keras.utils.get_file('facenet.pb',settings.FACENET_URL)
+except:
+    print('Could not download facetnet model from FACENET_URL in settings, using default')
+    FACENET_PATH = os.path.join(settings.BASE_DIR, 'models/facenet/20180402-114759.pb')
+
 
 graph_def = tf.compat.v1.GraphDef()
 loaded = graph_def.ParseFromString(open(FACENET_PATH,'rb').read())
