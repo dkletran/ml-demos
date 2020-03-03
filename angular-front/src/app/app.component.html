@@ -1,7 +1,9 @@
 <h1 class="title">Axance Tech ML Team Demos</h1>
 <nav>
   <a routerLink="/facereco" routerLinkActive="active">Face Regconition</a>
+  <a routerLink="/avatarstyling" routerLinkActive="active">Avatar Styling</a>
+
 </nav>
 <div>
-  <router-outlet #routerOutlet="outlet"></router-outlet>
+  <router-outlet #routerOutlet="outlet" skipLocactionChange></router-outlet>
 </div>

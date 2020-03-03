@@ -1,25 +1,25 @@
 import os
 import base64
 from backend.settings import BASE_DIR
-from PIL import Image
 from io import BytesIO
 import tensorflow as tf
+from tensorflow.python.eager.wrap_function import function_from_graph_def
 import numpy as np
-from tensorflow.keras.models import load_model
 from scipy.spatial.distance import cdist
 from PIL import Image, ImageDraw
 from mtcnn import MTCNN
 from .models import FaceBox
-from tensorflow.keras import backend as K
-from tensorflow import keras
 import json
 from .models import FaceTag
 
 URL_CANVAS_START = "data:image/png;base64,"
 URL_CANVAS_START_AT = len(URL_CANVAS_START)
-KERAS_FACENET_PATH = os.path.join(BASE_DIR, 'models/facenet_keras.h5')
+FACENET_PATH = os.path.join(BASE_DIR, 'models/facenet/20180402-114759.pb')
 
-fnmodel = load_model(KERAS_FACENET_PATH, custom_objects={'tf': tf})
+graph_def = tf.compat.v1.GraphDef()
+loaded = graph_def.ParseFromString(open(FACENET_PATH,'rb').read())
+
+fnmodel = function_from_graph_def(graph_def, inputs=['input:0', 'phase_train:0'], outputs='embeddings:0')
 # create the detector, using default weights
 detector = MTCNN()
 
@@ -29,7 +29,9 @@ def __toBase64URL(image):
     buffered = BytesIO()
     image.save(buffered, format="PNG")
     return URL_CANVAS_START + base64.b64encode(buffered.getvalue()).decode("utf-8")
-
+def __getEmbeddings(faces_pixels):
+    embeddings = fnmodel(input = tf.constant((faces_pixels - 127.5)/128.0, dtype=tf.float32), phase_train = tf.constant(False)).numpy()
+    return (embeddings - np.mean(embeddings, axis=1, keepdims=True))
 def __detect_face(pixels, required_size=(160,160)):
     # convert to array
     # detect faces in the image
@@ -65,9 +67,7 @@ def save_face_embedding(data, name):
         image = image.convert('RGB')
         pixels = np.asarray(image)
         pixels = np.expand_dims(pixels, axis=0)
-        mean = pixels.mean(axis=(1,2,3), keepdims=True)
-        std =  pixels.std(axis=(1,2,3), keepdims=True)
-        y_hat = fnmodel.predict((pixels - mean)/std)
+        y_hat = __getEmbeddings(pixels)
         embedding_str = json.dumps(y_hat[0].tolist())
         FaceTag.objects.update_or_create(
             defaults = {
@@ -91,23 +91,21 @@ def identify_face(data, required_size=(160,160)):
     for face in faces:
         pixels_array.append(np.asarray(face))
     faces_pixels = np.asarray(pixels_array)
-    mean = faces_pixels.mean(axis=(1,2,3), keepdims=True)
-    std =  faces_pixels.std(axis=(1,2,3), keepdims=True)
-    y_hat = fnmodel.predict((faces_pixels - mean)/std)
+    y_hat = __getEmbeddings(faces_pixels)
     known_names = []
     known_embeddings = []
     for facetag in FaceTag.objects.all():
         known_names.append(facetag.name)
         known_embeddings.append(json.loads(facetag.data))
     known_embeddings = np.asarray(known_embeddings)
-    m = cdist(y_hat, known_embeddings)
+    m = np.arccos(1-cdist(y_hat, known_embeddings, 'cosine'))/np.pi
     identified_ids = np.argmin(m, axis=1)
     boxes = []
     print(m)
     for i in range(len(faces)):
         name = 'unknown'
         d = m[i, identified_ids[i]] 
-        if d < 8.5:
+        if d < 0.25:
             name = known_names[identified_ids[i]]
             print(f'{name} identified with distance {d}')
         boxes.append( FaceBox(__toBase64URL(faces[i]), name))
