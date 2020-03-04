@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 	'rest_framework',
     'facereco_api.apps.ApiConfig',
+    'avatar_api.apps.ApiConfig'
 ]
 
 MIDDLEWARE = [

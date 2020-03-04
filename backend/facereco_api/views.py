@@ -4,22 +4,11 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.utils import json
 from rest_framework import serializers
-from rest_framework.parsers import BaseParser
 import json
+from lib.parsers import PlainTextParser
 
 from .service import detect_face, save_face_embedding, identify_face
 from .models import FaceTag
-class PlainTextParser(BaseParser):
-    """
-    Plain text parser.
-    """
-    media_type = 'text/plain'
-
-    def parse(self, stream, media_type=None, parser_context=None):
-        """
-        Simply return a string representing the body of the request.
-        """
-        return stream.read()
 
 # Serializers define the API representation.
 class FaceBoxSerializer(serializers.Serializer):
@@ -27,7 +16,7 @@ class FaceBoxSerializer(serializers.Serializer):
     name = serializers.StringRelatedField()
 
 
-class ApiViewSet(viewsets.ViewSet):
+class FaceRecoApiViewSet(viewsets.ViewSet):
     @action(methods=['post'], detail=False,url_path='tag_face')
     def tag_face(self, request):
         data = request.data

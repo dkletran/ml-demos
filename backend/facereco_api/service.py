@@ -1,19 +1,16 @@
 import os
-import base64
 from django.conf import settings
-from io import BytesIO
 import tensorflow as tf
 from tensorflow.python.eager.wrap_function import function_from_graph_def
 import numpy as np
 from scipy.spatial.distance import cdist
-from PIL import Image, ImageDraw
+from PIL import Image
 from mtcnn import MTCNN
 from .models import FaceBox
 import json
 from .models import FaceTag
+from lib.utils import fromBase64URL, toBase64URL
 
-URL_CANVAS_START = "data:image/png;base64,"
-URL_CANVAS_START_AT = len(URL_CANVAS_START)
 try: 
     FACENET_PATH = tf.keras.utils.get_file('facenet.pb',settings.FACENET_URL)
 except:
@@ -28,12 +25,7 @@ fnmodel = function_from_graph_def(graph_def, inputs=['input:0', 'phase_train:0']
 # create the detector, using default weights
 detector = MTCNN()
 
-def __fromBase64URL(data):
-    return Image.open(BytesIO(base64.b64decode(data[URL_CANVAS_START_AT:])))
-def __toBase64URL(image):
-    buffered = BytesIO()
-    image.save(buffered, format="PNG")
-    return URL_CANVAS_START + base64.b64encode(buffered.getvalue()).decode("utf-8")
+
 def __getEmbeddings(faces_pixels):
     embeddings = fnmodel(input = tf.constant((faces_pixels - 127.5)/128.0, dtype=tf.float32), phase_train = tf.constant(False)).numpy()
     return (embeddings - np.mean(embeddings, axis=1, keepdims=True))
@@ -58,17 +50,17 @@ def __detect_face(pixels, required_size=(160,160)):
     return face_array
 def detect_face(data):
     # load image from file
-    image = __fromBase64URL(data)
+    image = fromBase64URL(data)
     # convert to RGB, if needed
     image = image.convert('RGB')
     pixels = np.asarray(image)
     toReturn = []
     for img in __detect_face(pixels):
-        toReturn.append(FaceBox(__toBase64URL(img)))
+        toReturn.append(FaceBox(toBase64URL(img)))
     return toReturn
 def save_face_embedding(data, name):
     try:
-        image = __fromBase64URL(data)
+        image = fromBase64URL(data)
         image = image.convert('RGB')
         pixels = np.asarray(image)
         pixels = np.expand_dims(pixels, axis=0)
@@ -87,7 +79,7 @@ def save_face_embedding(data, name):
 
 def identify_face(data, required_size=(160,160)):
     # load image from file
-    image = __fromBase64URL(data)
+    image = fromBase64URL(data)
     # convert to RGB, if needed
     image = image.convert('RGB')
     pixels = np.asarray(image)
@@ -110,8 +102,8 @@ def identify_face(data, required_size=(160,160)):
     for i in range(len(faces)):
         name = 'unknown'
         d = m[i, identified_ids[i]] 
-        if d < 0.25:
+        if d < 0.252:
             name = known_names[identified_ids[i]]
             print(f'{name} identified with distance {d}')
-        boxes.append( FaceBox(__toBase64URL(faces[i]), name))
+        boxes.append( FaceBox(toBase64URL(faces[i]), name))
     return boxes

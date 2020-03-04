@@ -1,10 +1,15 @@
 import { NgModule }             from '@angular/core';
 import { RouterModule, Routes, NoPreloading } from '@angular/router';
 import { FaceRecoComponent } from './facereco/facereco.component'
+import { AvatarStylingComponent } from './avatarstyling/avatarstyling.component'
 const appRoutes: Routes = [
   {
     path: 'facereco',
-    component: FaceRecoComponent
+    component: FaceRecoComponent,
+  },
+  {
+    path: 'avatarstyling',
+    component: AvatarStylingComponent
   }
 ];
 
@@ -15,6 +20,7 @@ const appRoutes: Routes = [
       {
         enableTracing: false, // <-- debugging purposes only
         preloadingStrategy: NoPreloading,
+        initialNavigation : false,
       }
     )
   ],

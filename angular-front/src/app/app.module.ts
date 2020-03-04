@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DeviceDetectorModule } from 'ngx-device-detector';
 import { Router } from '@angular/router';
 import { FaceRecoModule } from './facereco/facereco.module'
+import { AvatarStylingModule } from './avatarstyling/avatarstyling.module'
 import { AppComponent }            from './app.component';
 
 import { AppRoutingModule }        from './app-routing.module';
@@ -17,6 +18,7 @@ import { AppRoutingModule }        from './app-routing.module';
     DeviceDetectorModule.forRoot(),
     AppRoutingModule,
     FaceRecoModule,
+    AvatarStylingModule,
   ],
   declarations: [
     AppComponent

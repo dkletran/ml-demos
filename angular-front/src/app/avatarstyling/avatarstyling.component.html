@@ -1,0 +1,113 @@
+<h2 class="d-flex justify-content-center">Avatar Creation With Styling</h2>
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Take a photo</mat-card-title>
+  </mat-card-header>
+
+  <div class="container">
+
+    <div class="d-flex flex-column align-items-center">
+      <div class="row justify-content-center pb-1">
+        <div *ngIf="isDesktop" class="mr-1">
+          <button *ngIf="cameraOn == false" class="btn btn-primary" (click)="startCamera()">From
+            Camera</button>
+          <button *ngIf="cameraOn" class="btn btn-primary" (click)="capture()">Capture Image</button>
+        </div>
+        <div class="ml-1">
+          <input hidden type="file" accept="image/*" (change)="drawLocalImage($event)" #imgInput>
+          <button class="btn btn-primary" (click)="imgInput.click()" [disabled]="loadingLocalImage || cameraOn">
+            <ng-template [ngIf]="loadingLocalImage">
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true">
+              </span>
+              Loading...
+            </ng-template>
+            <ng-template [ngIf]="loadingLocalImage == false">
+              {{ browseButtonLabel }}
+            </ng-template>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="d-flex flex-column align-items-center">
+      <div [hidden]="photoCaptured == false && cameraOn == false" class="row justify-content-center pb-1">
+        <video [hidden]="photoCaptured && cameraOn == false" #video class="vid" autoplay></video>
+        <canvas [hidden]="cameraOn" #canvas class="vid"></canvas>
+      </div>
+    </div>
+    <div class="row justify-content-center pb-1" *ngIf="photoCaptured && cameraOn==false">
+      <button class="btn btn-primary" (click)="cropAvatar()" [disabled]="cropping">
+        <ng-template [ngIf]="cropping">
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true">
+          </span>
+          Cropping avatar...
+        </ng-template>
+        <ng-template [ngIf]="cropping == false">
+          Start avatar creation
+        </ng-template>
+      </button>
+    </div>
+  </div>
+</mat-card>
+<mat-card *ngIf="avatars.length">
+  <mat-card-header>
+    <mat-card-title>Avatar creation</mat-card-title>
+  </mat-card-header>
+  <div>
+    <div class="d-flex flex-column align-items-center">
+      <div class="row justify-content-center pb-1">
+        <img *ngIf="!styledAvatar" class="avatar-image" src="{{ avatars[0] }}" />
+        <img *ngIf="styledAvatar" class="avatar-image" src="{{ styledAvatar }}" />
+      </div>
+      <div class="row justify-content-center pb-1">
+        <div class="d-flex flex-column mr-2">
+          <label class="form-check-label">Apply styling only for </label>
+          <div class="form-check">
+            <input type="checkbox" [(ngModel)]="styleFace" class="form-check-input" id="styleFace">
+            <label class="form-check-label" for="styleFace">face</label>
+          </div>
+          <div class="form-check">
+            <input type="checkbox" [(ngModel)]="styleHair" class="form-check-input" id="styleHair">
+            <label class="form-check-label" for="styleFace">hair</label>
+          </div>
+        </div>
+        <div class="d-flex flex-column ml-2">
+          <div class="form-check">
+            <input type="checkbox" [(ngModel)]="faceHairOnly" class="form-check-input" id="faceHairOnly">
+            <label class="form-check-label" for="faceHairOnly">Keep face hair only</label>
+          </div>
+        </div>
+        <div class="d-flex flex-column ml-2">
+          <div class="form-check">
+            <input type="checkbox" [(ngModel)]="styleHalf" class="form-check-input" id="styleHalf">
+            <label class="form-check-label" for="styleHalf">Apply styling left or right</label>
+          </div>
+          <div class="form-check">
+            <input [disabled]="styleHalf == false" name="styleLeftRight" type="radio" [(ngModel)]="styleHalfSide"
+              value="left" class="form-check-input" id="styleLeft">
+            <label class="form-check-label" for="styleLeft">left</label>
+          </div>
+          <div class="form-check">
+            <input [disabled]="styleHalf == false" name="styleLeftRight" type="radio" [(ngModel)]="styleHalfSide"
+              value="right" class="form-check-input" id="styleRight">
+            <label class="form-check-label" for="styleRight">right</label>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex align-bottom">
+        <button class="btn btn-primary" (click)="styleAvatar()" [disabled]="styling">
+          <ng-template [ngIf]="styling">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true">
+            </span>
+            Styling avatar...
+          </ng-template>
+          <ng-template [ngIf]="styling == false">
+            Apply
+          </ng-template>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</mat-card>
