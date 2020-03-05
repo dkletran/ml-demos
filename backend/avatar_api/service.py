@@ -58,9 +58,13 @@ def styleAvatar(image, styleFace = True,
     style_image = tf.io.decode_image(tf.io.read_file(style_path), dtype=tf.float32, channels=3)
     skin_mask, hair_mask = crop_face(content_image)
     stylized_image = stylize_image(content_image, style_image)
-    face = stylized_image*skin_mask if styleFace else content_image*skin_mask
-    hair = stylized_image*hair_mask if styleHair else content_image*hair_mask
-    faceHair = face+hair
+
+    face = stylized_image*skin_mask if styleFace or not styleHair else content_image*skin_mask
+    hair = stylized_image*hair_mask if styleHair or not styleFace else content_image*hair_mask
+    background =( (1.0-skin_mask-hair_mask)*tf.ones(shape=content_image.shape) if faceHairOnly
+            else (1.0 - skin_mask-hair_mask)*content_image if styleFace or styleHair
+            else (1.0 - skin_mask-hair_mask)*stylized_image)
+    stylized_image = face + hair + background
     halfMask = np.zeros(shape=content_image.shape)
 
     _,width,_  = content_image.shape
@@ -70,11 +74,17 @@ def styleAvatar(image, styleFace = True,
         halfMask[:,width//2:,:] = 1.0
     else:
         halfMask[:,:,:] = 1.0
+    
     halfMask = tf.constant(halfMask, dtype=tf.float32)
-    faceHair = faceHair*halfMask + (1.0-halfMask)*(hair_mask+skin_mask)*content_image
-    background =( (1.0-skin_mask-hair_mask)*tf.ones(shape=content_image.shape) if faceHairOnly
-            else (1.0 - skin_mask-hair_mask)*content_image)
-    to_return = tf.keras.preprocessing.image.array_to_img(faceHair + background)
+    if faceHairOnly:
+        stylized_image = ( stylized_image*halfMask +
+                (1.0-halfMask)*(skin_mask+hair_mask)*content_image
+                +(1.0 - halfMask)*background
+                )
+    else:
+        stylized_image = ( stylized_image*halfMask +
+                (1.0-halfMask)*content_image)
+    to_return = tf.keras.preprocessing.image.array_to_img(stylized_image)
     return toBase64URL(to_return)
 
 def cropAvatar(data, ratio = (2,2)):
