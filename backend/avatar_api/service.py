@@ -56,25 +56,26 @@ def styleAvatar(image, styleFace = True,
     data = data.convert('RGB')
     content_image = tf.constant(np.asarray(data)/255.0, dtype = tf.float32)   # detect faces in the image
     style_image = tf.io.decode_image(tf.io.read_file(style_path), dtype=tf.float32, channels=3)
-    mask = tf.zeros(shape = content_image.shape)
     skin_mask, hair_mask = crop_face(content_image)
-    if styleFace:
-        mask = mask + skin_mask
-    if styleHair:
-        mask = mask + hair_mask
-    if not styleFace and not styleHair:
-        mask = tf.ones(shape = content_image.shape)
     stylized_image = stylize_image(content_image, style_image)
-    if faceHairOnly:
-        background = (1-hair_mask-skin_mask)*tf.ones(shape=content_image.shape)
-        if styleFace or styleHair:
-            background = background + (skin_mask+hair_mask-mask)*content_image            
-    else:
-        background = (1-mask)*content_image
+    face = stylized_image*skin_mask if styleFace else content_image*skin_mask
+    hair = stylized_image*hair_mask if styleHair else content_image*hair_mask
+    faceHair = face+hair
+    halfMask = np.zeros(shape=content_image.shape)
 
-    stylized_image = mask*stylized_image + background
-    stylized_image = tf.keras.preprocessing.image.array_to_img(stylized_image)
-    return toBase64URL(stylized_image)
+    _,width,_  = content_image.shape
+    if styleSide == 'left':
+        halfMask[:,0:width//2,:] = 1.0
+    elif styleSide == 'right':
+        halfMask[:,width//2:,:] = 1.0
+    else:
+        halfMask[:,:,:] = 1.0
+    halfMask = tf.constant(halfMask, dtype=tf.float32)
+    faceHair = faceHair*halfMask + (1.0-halfMask)*(hair_mask+skin_mask)*content_image
+    background =( (1.0-skin_mask-hair_mask)*tf.ones(shape=content_image.shape) if faceHairOnly
+            else (1.0 - skin_mask-hair_mask)*content_image)
+    to_return = tf.keras.preprocessing.image.array_to_img(faceHair + background)
+    return toBase64URL(to_return)
 
 def cropAvatar(data, ratio = (2,2)):
     # convert to array

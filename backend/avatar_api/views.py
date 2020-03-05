@@ -39,7 +39,8 @@ class AvatarStylingApiViewSet(viewsets.ViewSet):
             try:
                 styleImageStr =  styleAvatar(**data)
                 return Response(styleImageStr)
-            except Exception:
+            except Exception as e:
+                print(e)
                 return Response([])
         else:
             return Response([])
