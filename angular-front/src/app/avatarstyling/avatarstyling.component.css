@@ -3,5 +3,6 @@
     height: 50%;
 }
 .avatar-image {
-    width:200px;
+    width:50%;
+    height:auto;
 }
