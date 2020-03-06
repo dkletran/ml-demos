@@ -10,7 +10,12 @@ const appRoutes: Routes = [
   {
     path: 'avatarstyling',
     component: AvatarStylingComponent
+  },
+  {
+    path: '**', 
+     redirectTo: '/404'
   }
+
 ];
 
 @NgModule({

@@ -21,6 +21,7 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index),
     path('admin/', admin.site.urls),
-    url('facereco/', include('facereco_api.urls')),
-    url('avatarstyling/', include('avatar_api.urls'))
+    url('apis/', include('facereco_api.urls')),
+    url('apis/', include('avatar_api.urls')),
+    url(r'^(?P<route>.*)/$', views.index),
 ]

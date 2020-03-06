@@ -7,7 +7,7 @@ import { FaceBox } from './face-box';
   providedIn: 'root'
 })
 export class FaceService {
-  private faceApiUrl = '/facereco/api';  // URL to web api
+  private faceApiUrl = '/apis/facereco';  // URL to web api
   constructor(private http:HttpClient) { }
 
   tagFace(base64Img:String, name:String):Observable<String>{

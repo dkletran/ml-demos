@@ -12,7 +12,7 @@ from lib.utils import fromBase64URL, toBase64URL
 
 detector = MTCNN()
 try:
-    faceseg_path = tf.keras.utils.get_file('faceseg.zip', settings.FACE_HAIR_MODEL_URL,  cache_subdir='faceseg', extract=True)
+    faceseg_path = tf.keras.utils.get_file(os.path.basename(settings.FACE_HAIR_MODEL_URL), settings.FACE_HAIR_MODEL_URL,  cache_subdir='faceseg', extract=True)
     faceseg_path = os.path.dirname(faceseg_path)
     faceseg = tf.saved_model.load(faceseg_path)
 except Exception as e:

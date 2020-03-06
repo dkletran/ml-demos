@@ -7,7 +7,7 @@ import { AvatarBox } from './avatar-box';
   providedIn: 'root'
 })
 export class AvatarStylingService {
-  private avatarApi = '/avatarstyling/api';  // URL to web api
+  private avatarApi = '/apis/avatarstyling';  // URL to web api
   constructor(private http: HttpClient) { }
 
 

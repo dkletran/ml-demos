@@ -4,6 +4,6 @@ from rest_framework.routers import DefaultRouter
 from . import views
 
 router = DefaultRouter()
-router.register(r'api', views.AvatarStylingApiViewSet, basename='api')
+router.register(r'avatarstyling', views.AvatarStylingApiViewSet, basename='avatarstyling')
 
 urlpatterns = router.urls

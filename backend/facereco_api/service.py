@@ -12,7 +12,7 @@ from .models import FaceTag
 from lib.utils import fromBase64URL, toBase64URL
 
 try: 
-    FACENET_PATH = tf.keras.utils.get_file('facenet.pb',settings.FACENET_URL)
+    FACENET_PATH = tf.keras.utils.get_file(os.path.basename(settings.FACENET_URL),settings.FACENET_URL)
 except:
     print('Could not download facetnet model from FACENET_URL in settings, using default')
     FACENET_PATH = os.path.join(settings.BASE_DIR, 'models/facenet/20180402-114759.pb')
