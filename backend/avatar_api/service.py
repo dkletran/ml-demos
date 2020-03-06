@@ -31,7 +31,7 @@ except Exception as e:
     print(e)
     print('Error loading sample styling image')
 
-def crop_face(image, model_height = 218, model_width=178):
+def crop_face(image, model_height = 224, model_width=224):
   resized_image = tf.image.resize(image, (model_height, model_width))
   mask = faceseg(resized_image[tf.newaxis,...])[0].numpy().argmax(axis=2)[..., tf.newaxis]
   skin_mask = mask == 1
