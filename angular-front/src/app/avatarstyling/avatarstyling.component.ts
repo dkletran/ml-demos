@@ -145,6 +145,7 @@ export class AvatarStylingComponent implements OnInit {
               }
             );
             this.cropping = false;
+            this.styledAvatar = '';
           })
     );
   }
