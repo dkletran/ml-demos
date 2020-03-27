@@ -1,0 +1,101 @@
+.tweets {
+    margin: 0 0 2em 0;
+    list-style-type: none;
+    padding: 0;
+    display: block;
+    overflow: auto;
+  }
+.tweets mat-card {
+    position: relative;
+    background-color: #EEE;
+    margin: .5em;
+    padding: .3em 0;
+    border-radius: 4px;
+    display: grid;
+    grid-template-columns: 10em auto;
+  }
+  
+.tweets mat-card:hover {
+    color: #607D8B;
+    background-color: #DDD;
+    left: .1em;
+  }
+  
+
+.tweets mat-card-header {
+  float: left;
+  display:grid;
+  grid-template-rows: 60% 40%;
+  justify-items:right;
+  margin-right: 2em;
+}
+
+.tweets .mat-card-content {
+  height:100%;
+  display:table;
+}
+
+.tweets .mat-card-avatar {
+  border-radius:20%;
+  float:right;
+}
+
+.tweets mat-card-title {
+  margin-right:-16px;
+}
+
+
+.mat-card-content-text {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.input-full-width {
+  width:100em;
+}
+
+.topics {
+  margin: 0 0 0 0;
+  list-style-type: none;
+  width: 100%;
+  height:10em;
+  display:inline-block;
+  font-size: small;
+  overflow-y: auto;
+}
+.topics li {
+  cursor: pointer;
+  position: relative;
+  left: 0;
+  background-color: #EEE;
+  margin: .5em;
+  height: 2em;
+  border-radius: 4px;
+}
+.topics li:hover {
+  color: #607D8B;
+  background-color: #DDD;
+  left: .1em;
+}
+.topics li.selected {
+  background-color: #CFD8DC;
+  color: white;
+}
+.topics li.selected:hover {
+  background-color: #BBD8DC;
+  color: white;
+}
+.topics .badge {
+  display: inline-block;
+  color: white;
+  position: relative;
+  left: -1px;
+  height: 100%;
+  margin-right: .8em;
+  border-radius: 4px 0 0 4px;
+  width:3em;
+  padding:0;
+  vertical-align: middle;
+  font-size: 110%;
+}
+

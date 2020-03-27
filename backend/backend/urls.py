@@ -23,5 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     url('apis/', include('facereco_api.urls')),
     url('apis/', include('avatar_api.urls')),
+    url('apis/', include('tweettopic_api.urls')),
     url(r'^(?P<route>.*)/$', views.index),
 ]

@@ -4,8 +4,9 @@ import { FormsModule }    from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DeviceDetectorModule } from 'ngx-device-detector';
 import { Router } from '@angular/router';
-import { FaceRecoModule } from './facereco/facereco.module'
-import { AvatarStylingModule } from './avatarstyling/avatarstyling.module'
+import { FaceRecoModule } from './facereco/facereco.module';
+import { AvatarStylingModule } from './avatarstyling/avatarstyling.module';
+import { TweetModule } from './tweettopic/tweet.module'
 import { AppComponent }            from './app.component';
 
 import { AppRoutingModule }        from './app-routing.module';
@@ -19,6 +20,7 @@ import { AppRoutingModule }        from './app-routing.module';
     AppRoutingModule,
     FaceRecoModule,
     AvatarStylingModule,
+    TweetModule
   ],
   declarations: [
     AppComponent

@@ -4,7 +4,7 @@
 dist
 tmp
 out-tsc
-
+venv
 # Only exists if Bazel was run
 bazel-out
 
@@ -23,7 +23,7 @@ speed-measure-plugin*.json
 *.launch
 .settings/
 *.sublime-workspace
-
+.vscode
 # IDE - VSCode
 .vscode/*
 !.vscode/settings.json

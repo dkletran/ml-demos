@@ -6,3 +6,7 @@ djangorestframework==3.11.0
 Pillow==7.0.0
 numpy==1.18.1
 scipy==1.4.1
+tweepy==3.8.0
+stop-words==2018.7.23
+eli5==0.10.1
+

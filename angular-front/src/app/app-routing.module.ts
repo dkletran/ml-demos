@@ -1,7 +1,8 @@
 import { NgModule }             from '@angular/core';
 import { RouterModule, Routes, NoPreloading } from '@angular/router';
-import { FaceRecoComponent } from './facereco/facereco.component'
-import { AvatarStylingComponent } from './avatarstyling/avatarstyling.component'
+import { FaceRecoComponent } from './facereco/facereco.component';
+import { AvatarStylingComponent } from './avatarstyling/avatarstyling.component';
+import { TweetsComponent } from './tweettopic/tweets.component';
 const appRoutes: Routes = [
   {
     path: 'facereco',
@@ -10,6 +11,10 @@ const appRoutes: Routes = [
   {
     path: 'avatarstyling',
     component: AvatarStylingComponent
+  },
+  {
+    path: 'tweettopic',
+    component: TweetsComponent
   },
   {
     path: '**', 

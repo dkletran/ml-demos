@@ -1,0 +1,65 @@
+<div style="text-align: center">
+  <mat-form-field class="input-fix-width">
+    <input #queryBox (input)="updateQuery();" matInput [(ngModel)]="query" placeholder="Type your query" />
+  </mat-form-field>
+  <mat-checkbox (change)="tweets=[];" [(ngModel)]="retweetIncluded">Include retweets</mat-checkbox>
+</div>
+<mat-tab-group>
+  <mat-tab label="All tweets">
+
+    <ul class='tweets'>
+      <li @items *ngFor="let tweet of tweets">
+        <mat-card>
+          <mat-card-header>
+            <img mat-card-avatar src='{{ tweet.user_image_url }}' />
+            <mat-card-subtitle>
+              {{ tweet.screen_name }}
+            </mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="mat-card-content-text" [innerHtml]="tweet.text | linkify : {
+                      className: 'linkifiedclass',
+                      target: {
+                        url: '_self'
+                      }
+                    }">
+            </div>
+          </mat-card-content>
+
+        </mat-card>
+      </li>
+    </ul>
+  </mat-tab>
+  <mat-tab label="By topic">
+    <ul class="topics">
+      <li *ngFor="let topic of topics" [class.selected]="selectedTopics.has(topic.id)" (click)="onSelectTopic(topic)">
+        <div class="badge" [style.backgroundColor]="topic.color">
+          {{topic.id}}
+        </div>
+        {{topic.keywords}}
+      </li>
+    </ul>
+    <ul class='tweets'>
+      <li @items *ngFor="let tweet of tweetsByTopic">
+        <mat-card>
+          <mat-card-header [style.backgroundColor]="topics[tweet.topic[0]].color">
+            <img mat-card-avatar src='{{ tweet.user_image_url }}' />
+            <mat-card-subtitle>
+              {{ tweet.screen_name }}
+            </mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="mat-card-content-text" [innerHtml]="tweet.text | linkify : {
+                      className: 'linkifiedclass',
+                      target: {
+                        url: '_self'
+                      }
+                    }">
+            </div>
+          </mat-card-content>
+
+        </mat-card>
+      </li>
+    </ul>
+  </mat-tab>
+</mat-tab-group>

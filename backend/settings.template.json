@@ -2,5 +2,11 @@
     "FACENET_URL":"URL TO FACENET MODEL",
     "STYLE_MODULE_URL":"...",
     "FACE_HAIR_MODEL_URL":"...",
-    "SAMPLE_STYLE_IMAGE_URL":"..."
+    "SAMPLE_STYLE_IMAGE_URL":"...",
+    "TWITTER_API_AUTH":{
+        "consumer_key":"...",
+        "consumer_secret":"...",
+        "key":"...",
+        "secret":"..."
+    }
 }
