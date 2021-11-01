@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { AvatarStylingService } from './avatarstyling.service'
-declare var require: any
+import * as fixRotation from 'src/app/shared/fix-rotation'
 
 @Component({
   selector: 'app-avatarstyling',
@@ -96,7 +96,6 @@ export class AvatarStylingComponent implements OnInit {
 
     // For this example we only want one image. We'll take the first.
     var file = files[0];
-    let fixRotation = require('fix-image-rotation');
     fixRotation.fixRotation([file]).then(
       blobs => {
         var reader = new FileReader();
