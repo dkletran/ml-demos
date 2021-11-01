@@ -3,6 +3,7 @@ FROM tensorflow/tensorflow:2.3.0
 USER root
 
 RUN apt-get update
+RUN apt install -y libgl1-mesa-glx
 RUN apt install -y npm && npm install -g npm@latest-6 n && n 14.15
 
 WORKDIR /app/backend
